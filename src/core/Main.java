@@ -34,6 +34,9 @@ public class Main {
      * @param args The command-line arguments (which are ignored)
      */
     public static void main(String[] args) {
+        // The following is supposed to be the world's "hardest" Sudoku puzzle.
+        // It isn't really so. It has MORE THAN 1 SOLUTION
+        // My code returns only one. In under a second. Try it.
         Board board = Generator.parse("" +
                 "+-----------------------+\n" +
                 "| 8 . . | . . . | . . . |\n" +
