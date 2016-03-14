@@ -15,6 +15,8 @@ public class Constants {
     public static final List<List<String>> UNITS;
     public static final Map<String, Set<String>> PEERS;
 
+    protected static final int MAX_SHUFFLE = 10;
+
     static {
         // All the possibilities linearly stored in this String
         StringBuilder builder = new StringBuilder(SIZE);

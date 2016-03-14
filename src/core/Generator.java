@@ -8,6 +8,7 @@ import java.util.Random;
 import static core.Constants.*;
 
 /**
+ * This class is responsible for randomly generating Game states
  * @author Subhomoy Haldar
  * @version 1.0
  */
@@ -15,11 +16,6 @@ public class Generator {
     public static void main(String[] args) {
         int[][] array = generateArray();
         System.out.println(toString(array));
-        transpose(array);
-        System.out.println(toString(array));
-        shuffleSquareRows(array);
-        System.out.println(toString(array));
-
     }
 
     public static Board parse(String input) {
@@ -27,30 +23,12 @@ public class Generator {
         int i = 0;
         for (String square : SQUARES) {
             char c;
-            do
+            do {
                 c = input.charAt(i++);
-            while (!(Character.isDigit(c) || c == '.'));
+            } while (!(Character.isDigit(c) || c == '.'));
             state.put(square, CANDIDATES.indexOf(c) > -1
                     ? String.valueOf(c)
                     : CANDIDATES);
-        }
-        return new Board(state);
-    }
-
-    public static Board generateMap() {
-        double probability = 0.7;
-        Map<String, String> state = new LinkedHashMap<>(NUMBER_OF_SQUARES);
-        char row = 'A';
-        char col;
-        for (int i = 0; i < SIZE; i++, row++) {
-            col = '1';
-            for (int j = 0; j < SIZE; j++, col++) {
-                String candidates = (Math.random() <= probability)
-                        ? String.valueOf((i * UNIT + i / UNIT + j) % SIZE + 1)
-                        : CANDIDATES;
-
-                state.put("" + row + col, candidates);
-            }
         }
         return new Board(state);
     }
@@ -61,6 +39,13 @@ public class Generator {
             for (int j = 0; j < SIZE; j++) {
                 array[i][j] = (i * UNIT + i / UNIT + j) % SIZE + 1;
             }
+        }
+        Random random = new Random();
+        int limit = random.nextInt(Constants.MAX_SHUFFLE);
+        for (int i = 0; i < limit; i++) {
+            if (random.nextBoolean()) transpose(array);
+            if (random.nextBoolean()) shuffleSquareRows(array);
+            if (random.nextBoolean()) shuffleSingleRows(array);
         }
         return array;
     }
@@ -81,6 +66,25 @@ public class Generator {
             int j = 1 + i + random.nextInt(UNIT - 1 - i);
             swapSquareRows(array, i, j);
         }
+    }
+
+    private static void shuffleSingleRows(int[][] array) {
+        Random random = new Random();
+        for (int i = 0; i < UNIT; i++) {
+            int start = i * UNIT;
+            int limit = start + UNIT - 1;
+            for (int j = start; j < limit; j++) {
+                int k = start + 1 + random.nextInt(limit - j);
+                swapSingleRows(array, j, k);
+            }
+        }
+    }
+
+    private static void swapSingleRows(int[][] array, int i, int j) {
+        int[] temp = new int[SIZE];
+        System.arraycopy(array[i], 0, temp, 0, SIZE);
+        System.arraycopy(array[j], 0, array[i], 0, SIZE);
+        System.arraycopy(temp, 0, array[j], 0, SIZE);
     }
 
     private static void swapSquareRows(int[][] array, int i, int j) {
