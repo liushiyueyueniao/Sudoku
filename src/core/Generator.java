@@ -1,11 +1,10 @@
 package core;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Random;
 
-import static core.Constants.*;
+import static core.Constants.SIZE;
+import static core.Constants.UNIT;
 
 /**
  * This class is responsible for randomly generating Game states
@@ -13,27 +12,8 @@ import static core.Constants.*;
  * @version 1.0
  */
 public class Generator {
-    public static void main(String[] args) {
-        int[][] array = generateArray();
-        System.out.println(toString(array));
-    }
 
-    public static Board parse(String input) {
-        Map<String, String> state = new LinkedHashMap<>(NUMBER_OF_SQUARES);
-        int i = 0;
-        for (String square : SQUARES) {
-            char c;
-            do {
-                c = input.charAt(i++);
-            } while (!(Character.isDigit(c) || c == '.'));
-            state.put(square, CANDIDATES.indexOf(c) > -1
-                    ? String.valueOf(c)
-                    : CANDIDATES);
-        }
-        return new Board(state);
-    }
-
-    public static int[][] generateArray() {
+    public static int[][] generateSolved() {
         int[][] array = new int[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {

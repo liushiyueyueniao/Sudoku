@@ -1,5 +1,7 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +13,9 @@ import java.util.Map;
  */
 public class Main {
 
+    /**
+     * A handy template for reference.
+     */
     private static final String BLANK = "" +
             "+-----------------------+\n" +
             "| . . . | . . . | . . . |\n" +
@@ -26,6 +31,7 @@ public class Main {
             "| . . . | . . . | . . . |\n" +
             "+-----------------------+";
 
+
     /**
      * The entry point for the program. Currently it does not accept any input.
      * It won't be difficult to do that. I encourage everyone to tinker with
@@ -35,25 +41,52 @@ public class Main {
      */
     public static void main(String[] args) {
         // The following is supposed to be the world's "hardest" Sudoku puzzle.
-        // It isn't really so. It has MORE THAN 1 SOLUTION
-        // My code returns only one. In under a second. Try it.
-        Board board = Generator.parse("" +
+        // It isn't really so. It has MORE THAN 1 SOLUTION (335 to be exact)
+        // My code finds all 335 of them.
+//        Board board = Parser.parse("" +
+//                "+-----------------------+\n" +
+//                "| 8 . . | . . . | . . . |\n" +
+//                "| . . 3 | 6 . . | . . . |\n" +
+//                "| . 7 . | . 9 . | 2 . . |\n" +
+//                "|-------+-------+-------|\n" +
+//                "| . . 5 | . . 7 | . . . |\n" +
+//                "| . . . | . 4 5 | 7 . . |\n" +
+//                "| . . . | 1 . . | . 3 . |\n" +
+//                "|-------+-------+-------|\n" +
+//                "| . . 1 | . . . | . 6 8 |\n" +
+//                "| . . 8 | 5 . . | . 1 . |\n" +
+//                "| . 9 . | . . . | 4 . . |\n" +
+//                "+-----------------------+"
+//        );
+        Board board = Parser.parse("" +
                 "+-----------------------+\n" +
-                "| 8 . . | . . . | . . . |\n" +
-                "| . . 3 | 6 . . | . . . |\n" +
-                "| . 7 . | . 9 . | 2 . . |\n" +
+                "| . 7 4 | 3 . 2 | . . . |\n" +
+                "| . . . | . . 5 | . 4 . |\n" +
+                "| . . . | 6 . 7 | 9 . . |\n" +
                 "|-------+-------+-------|\n" +
-                "| . . 5 | . . 7 | . . . |\n" +
-                "| . . . | . 4 5 | 7 . . |\n" +
-                "| . . . | 1 . . | . 3 . |\n" +
+                "| . 5 6 | . . . | 7 9 . |\n" +
+                "| 3 . . | . . . | . . 5 |\n" +
+                "| . 2 7 | . . . | 6 8 . |\n" +
                 "|-------+-------+-------|\n" +
-                "| . . 1 | . . . | . 6 8 |\n" +
-                "| . . 8 | 5 . . | . 1 . |\n" +
-                "| . 9 . | . . . | 4 . . |\n" +
+                "| . . 5 | 7 . 1 | . . . |\n" +
+                "| . 1 . | 2 . . | . . . |\n" +
+                "| . . . | 4 . 8 | 1 6 . |\n" +
                 "+-----------------------+"
         );
         System.out.println(board);
-        System.out.println(search(board));
+        List<Board> solutions = new ArrayList<>();
+        search(board, solutions);
+        if (solutions.isEmpty()) {
+            System.out.println("No solution found. Input is invalid.");
+        } else if (solutions.size() == 1) {
+            System.out.println(solutions.get(0));
+        } else {
+            System.out.println("Invalid Sudoku : multiple solutions.");
+            System.out.println("Number of solutions = " + solutions.size());
+            System.out.println("The solutions are ... ");
+            System.out.println(solutions);
+
+        }
     }
 
     /**
@@ -74,19 +107,19 @@ public class Main {
     /**
      * Performs a DFS (Depth-First-Search) of the possible states. Eliminates
      * as many state possibilities as possible using constraint propagation.
-     * Returns the solution state or {@code null} if no solution wa found.
      *
      * @param board The state to work with.
-     * @return The solution if obtained, {@code null} otherwise.
      */
-    private static Board search(Board board) {
+    private static void search(Board board, List<Board> solutions) {
         // The board provided is faulty
         if (board == null || board.isWrong())
-            return null;
+            return;
 
         // Solution obtained
-        if (board.isSolved())
-            return board;
+        if (board.isSolved()) {
+            solutions.add(board);
+            return;
+        }
 
         // Proceeding with the square with minimum candidates helps to reduce
         // the chance of failure. For example, if we proceed with 7 (say)
@@ -102,15 +135,9 @@ public class Main {
 
             Board next = new Board(board, pair.getKey(), value);
             next = propagateTillPossible(next);
-            next = search(next);
+            search(next, solutions);
 
-            if (next != null) {
-                // Solution found!
-                return next;
-            }
         }
-        // Should never reach here... the exit clause for faulty puzzle exits
-        return null;
     }
 
 }
