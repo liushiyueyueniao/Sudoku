@@ -3,18 +3,45 @@ package core;
 import java.util.*;
 
 /**
+ * This class generates and stores constants that will be used frequently
+ * throughout the project.
+ *
  * @author Subhomoy Haldar
  * @version 1.0
  */
 public class Constants {
+    /**
+     * The side of the smaller square unit.
+     */
     public static final int UNIT = 3;
+    /**
+     * The number of squares in one unit.
+     */
     public static final int SIZE = UNIT * UNIT;
+    /**
+     * The total number of squares in the game.
+     */
     public static final int NUMBER_OF_SQUARES = SIZE * SIZE;
+    /**
+     * The String containing all the possible candidates.
+     */
     public static final String CANDIDATES;
+    /**
+     * The list of all the squares in the game.
+     */
     public static final List<String> SQUARES;
+    /**
+     * The list of all units (rows, columns, squares) in the game.
+     */
     public static final List<List<String>> UNITS;
+    /**
+     * The map between every square and its set of peers.
+     */
     public static final Map<String, Set<String>> PEERS;
 
+    /**
+     * The maximum number of times the Generator will run the shuffle loop.
+     */
     protected static final int MAX_SHUFFLE = 20;
 
     static {

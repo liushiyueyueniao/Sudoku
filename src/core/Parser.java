@@ -33,7 +33,7 @@ public class Parser {
                 char c;
                 do {
                     c = input.charAt(i++);
-                } while (!(Character.isDigit(c) || c == '.'));
+                } while (!(CANDIDATES.indexOf(c) > -1 || c == '0' || c == '.'));
                 state.put(square, CANDIDATES.indexOf(c) > -1
                         ? String.valueOf(c)
                         : CANDIDATES);
