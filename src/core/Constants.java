@@ -25,7 +25,7 @@ public class Constants {
         }
         CANDIDATES = builder.toString();
 
-        // Generate the square labels and initial candidate map
+        // Generate the square labels
         List<String> squareList = new ArrayList<>(NUMBER_OF_SQUARES);
         char row = 'A';
         char col;
